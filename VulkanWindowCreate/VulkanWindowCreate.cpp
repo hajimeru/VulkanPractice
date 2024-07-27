@@ -57,6 +57,7 @@ private:
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
         create_info.setEnabledExtensionCount(glfwExtensionCount);
         create_info.setPpEnabledExtensionNames(glfwExtensions);
+        create_info.setEnabledLayerCount(0);
 
         create_info.setPApplicationInfo(&app_info);
         instance_ = vk::createInstance(create_info);

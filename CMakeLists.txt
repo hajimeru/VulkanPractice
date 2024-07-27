@@ -17,5 +17,5 @@ find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED PATHS "E:/Programming/glfw-3.4/install/lib/cmake/glfw3")
 
 # 包含子项目。
-add_subdirectory ("VulkanWindowCreate")
-
+add_subdirectory("VulkanWindowCreate")
+add_subdirectory("AddValidationLayer")
