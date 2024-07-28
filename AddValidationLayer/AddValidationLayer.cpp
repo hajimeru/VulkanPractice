@@ -17,6 +17,18 @@ const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
 
+void CreateDebugUtilsMessengerEXT(vk::Instance instance, const vk::DebugUtilsMessengerCreateInfoEXT& pCreateInfo, vk::Optional<const vk::AllocationCallbacks> pAllocator, vk::DebugUtilsMessengerEXT& debugMessenger) {
+    //动态加载调用创建扩展函数
+    vk::DispatchLoaderDynamic dld(instance, vkGetInstanceProcAddr);
+    debugMessenger = instance.createDebugUtilsMessengerEXT(pCreateInfo, pAllocator, dld);
+}
+
+void DestroyDebugUtilsMessengerEXT(vk::Instance instance, const vk::DebugUtilsMessengerEXT& debugMessenger, vk::Optional<const vk::AllocationCallbacks> pAllocator) {
+    //动态加载调用创建扩展函数
+    vk::DispatchLoaderDynamic dld(instance, vkGetInstanceProcAddr);
+    instance.destroyDebugUtilsMessengerEXT(debugMessenger, pAllocator, dld);
+}
+
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
@@ -60,6 +72,9 @@ private:
     }
 
     void cleanup() {
+        if (enableValidationLayers) {
+            DestroyDebugUtilsMessengerEXT(instance_, debugMessenger_, nullptr);
+        }
 
         //销毁glfw窗口
         glfwDestroyWindow(window_);
@@ -116,10 +131,7 @@ private:
 
         vk::DebugUtilsMessengerCreateInfoEXT create_info;
         populateDebugMessengerCreateInfo(create_info);
-
-        //C++ 这里需要动态加载调用
-        vk::DispatchLoaderDynamic dld(instance_, vkGetInstanceProcAddr);
-        debugMessenger_ = instance_.createDebugUtilsMessengerEXT(create_info,nullptr, dld);
+        CreateDebugUtilsMessengerEXT(instance_, create_info, nullptr, debugMessenger_);
     }
 
     std::vector<const char*> getRequiredExtensions() {
