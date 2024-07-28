@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
+#include <optional>
 
 #include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_funcs.hpp>
@@ -48,6 +49,9 @@ private:
     GLFWwindow* window_;
     vk::Instance instance_;
     vk::DebugUtilsMessengerEXT debugMessenger_;
+    vk::PhysicalDevice physicalDevice;
+
+
     void initWindow() {
         //初始化glfw
         glfwInit();
@@ -62,6 +66,7 @@ private:
     void initVulkan() {
         createInstance();
         setupDebugMessenger();
+        pickPhysicalDevice();
     }
 
     void mainLoop() {
@@ -132,6 +137,32 @@ private:
         vk::DebugUtilsMessengerCreateInfoEXT create_info;
         populateDebugMessengerCreateInfo(create_info);
         CreateDebugUtilsMessengerEXT(instance_, create_info, nullptr, debugMessenger_);
+    }
+
+    void pickPhysicalDevice()
+    {
+       std::vector<vk::PhysicalDevice> devices = instance_.enumeratePhysicalDevices();
+       for (const auto& device : devices){
+           if (isDeviceSuitable(device)) {
+               physicalDevice = device;
+           }
+       }
+
+       if (physicalDevice == nullptr){
+           throw std::runtime_error("failed to find a suitable GPU!");
+       }
+
+    }
+
+    bool isDeviceSuitable(vk::PhysicalDevice device) {
+        std::optional<uint32_t> indices;
+        std::vector<vk::QueueFamilyProperties> queueFamilies = device.getQueueFamilyProperties();
+        for (const auto& queueFamily : queueFamilies) {
+            if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics) {
+                return true;
+            }
+        }
+        return false;
     }
 
     std::vector<const char*> getRequiredExtensions() {
