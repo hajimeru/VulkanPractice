@@ -19,3 +19,4 @@ find_package(glfw3 REQUIRED PATHS "E:/Programming/glfw-3.4/install/lib/cmake/glf
 # 包含子项目。
 add_subdirectory("VulkanWindowCreate")
 add_subdirectory("AddValidationLayer")
+add_subdirectory("PhysicalDeviceSelect")
