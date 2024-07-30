@@ -20,3 +20,6 @@ find_package(glfw3 REQUIRED PATHS "E:/Programming/glfw-3.4/install/lib/cmake/glf
 add_subdirectory("VulkanWindowCreate")
 add_subdirectory("AddValidationLayer")
 add_subdirectory("PhysicalDeviceSelect")
+add_subdirectory("LogicalDevicesCreate")
+add_subdirectory("WindowSurface")
+
